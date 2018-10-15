@@ -14,11 +14,12 @@ int main(int argc, char* argv[]) {
     //FUNCTION FROM DEVICE DRIVER
     device* driver = device_new();
 
-    server_start(server, driver);
+    int res = server_start(server, driver);
 
-
-
-
-
+    //ERROR WARNING
+    if(res == 0){
+        printf("ERROR: IN server_start\n");
+        return 0;
+    }
 
 }
