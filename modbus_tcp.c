@@ -8,6 +8,7 @@ uint8_t rcv_apdu(int socket, uint16_t* transaction_id, uint8_t** apdu, uint16_t*
 
     uint8_t mbap[7];
 
+    //FUNCTION INSIDE SOCKET
     if(!socket_read(socket, mbap, 7)){
         return 0;
     }
@@ -23,5 +24,6 @@ uint8_t rcv_apdu(int socket, uint16_t* transaction_id, uint8_t** apdu, uint16_t*
 
     //SEND APDU TO SOCKET
     *apdu = ((uint8_t*)calloc((*apdu_size), sizeof(uint8_t)));
+    //FUNCTION INSIDE SOCKET
     return socket_read(socket, *apdu, *apdu_size);
 }

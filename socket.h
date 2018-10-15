@@ -13,5 +13,7 @@ struct sockaddr_in socket_addr(char* ip, int port);
 //SOCKET CHECK READ SIZE IS CORRECT
 uint8_t socket_read(int socket, uint8_t* buffer, int size);
 
+//SOCKET CLOSE
+void socket_close(int socket);
 
 #endif //TP2_SOCKET_H

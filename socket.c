@@ -29,3 +29,8 @@ uint8_t socket_read(int socket, uint8_t* buffer, int size){
 
     return 1;
 }
+
+//CLOSES SOCKET
+void socket_close(int socket){
+    close(socket);
+}
