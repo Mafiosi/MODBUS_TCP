@@ -14,7 +14,7 @@ void write_multiple_regs(int socket){
     int msg_size = ((rand() %  (10)) + 1);
     int msg_pos  = ((rand() % (101)) + 0);
 
-    printf("Writing %d regs at position %d\n", msg_size, msg_pos);
+    printf("Writing %d registers at position %d\n", msg_size, msg_pos);
 
     uint16_t* values = ((uint16_t*)calloc((msg_size), sizeof(uint16_t)));
     for(int i = 0; i < msg_size; i++){
@@ -25,10 +25,10 @@ void write_multiple_regs(int socket){
     error_t result = client_write_multiple_regs(socket, msg_pos, msg_size, values);
 
     if (result){
-        printf("It was a Success\n");
+        printf("ERROR: In Write Multiple Registers Client, %d\n", result);
     }
     else{
-        printf("ERROR: In Write Multiple Registers Client\n");
+        printf("It was a Success\n");
         for (int i = 0; i < msg_size; i++){
             printf("%hu", values[i]);
         }
@@ -40,16 +40,85 @@ void write_multiple_regs(int socket){
 //READ MULTIPLE REGS
 void read_multiple_regs(int socket){
 
+    //GIVE RANDOM VALUES TO SUBMIT
+    int msg_size = ((rand() %  (10)) + 1);
+    int msg_pos  = ((rand() % (101)) + 0);
+
+    printf("Read %d registers at position %d\n", msg_size, msg_pos);
+
+    //FUNCTION IN MODBUS_AP
+    uint16_t* values;
+    uint16_t  nothing;
+    error_t result = client_read_multiple_regs(socket, msg_pos,msg_size, &values, &nothing);
+
+    if(result){
+        printf("ERROR: In Read Multiple Registers Client, %d\n", result);
+    }
+    else{
+        printf("It was a Sucess\n");
+        for(int i = 0; i < msg_size; i++){
+            printf(" %hu", values[i]);
+        }
+        printf("\n");
+    }
+    free(values);
 }
 
 //WRITE_MULTIPLE_COILS
 void write_multiple_coils(int socket){
 
+    //GIVE RANDOM VALUES TO SUBMIT
+    int msg_size = ((rand() %  (10)) + 1);
+    int msg_pos  = ((rand() % (101)) + 0);
+
+    printf("Writing %d coils at position %d\n", msg_size, msg_pos);
+
+    uint8_t* values = ((uint8_t*)calloc((msg_size), sizeof(uint16_t)));
+    for(int i = 0; i < msg_size; i++){
+        values[i] = (uint8_t)((rand() % (2)) + 0);
+    }
+
+    //FUNCTION IN MODBUS_AP
+    error_t result = client_write_multiple_coils(socket, msg_pos, msg_size, values);
+
+    if (result){
+        printf("ERROR: In Write Multiple Coils Client, %d\n", result);
+    }
+    else{
+        printf("It was a Success\n");
+        for (int i = 0; i < msg_size; i++){
+            printf("%hu", values[i]);
+        }
+        printf("\n");
+    }
+    free(values);
 }
 
 //READ MULTIPLE REGS
 void read_multiple_coils(int socket){
 
+    //GIVE RANDOM VALUES TO SUBMIT
+    int msg_size = ((rand() %  (10)) + 1);
+    int msg_pos  = ((rand() %  (11)) + 0);
+
+    printf("Read %d Coils at position %d\n", msg_size, msg_pos);
+
+    //FUNCTION IN MODBUS_AP
+    uint16_t* values;
+    uint16_t  nothing;
+    error_t result = client_read_multiple_regs(socket, msg_pos,msg_size, &values, &nothing);
+
+    if(result){
+        printf("ERROR: In Read Multiple Registers Client, %d\n", result);
+    }
+    else{
+        printf("It was a Sucess\n");
+        for(int i = 0; i < msg_size; i++){
+            printf(" %hu", values[i]);
+        }
+        printf("\n");
+    }
+    free(values);
 }
 
 //MAIN CLIENT FUNCTION
