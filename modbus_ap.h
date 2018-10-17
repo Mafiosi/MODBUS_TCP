@@ -37,6 +37,7 @@ typedef enum {
 //SERVER
 int server_init(char* ip, int port);
 int server_start(int server, device* driver);
+void server_close(int socket);
 
     //SERVER PROCESSING
 int server_process_client(int client, device* driver);
@@ -47,9 +48,13 @@ void server_process_read_multiple_regs(uint8_t* req_apdu, uint16_t req_apdu_size
 void server_process_write_multiple_regs(uint8_t* req_apdu, uint16_t req_apdu_size, device* driver, uint8_t** resp_apdu, uint16_t* resp_apdu_size);
 void server_process_read_multiple_coils(uint8_t* req_apdu, uint16_t req_apdu_size, device* driver, uint8_t** resp_apdu, uint16_t* resp_apdu_size);
 void server_process_write_multiple_coils(uint8_t* req_apdu, uint16_t req_apdu_size, device* driver, uint8_t** resp_apdu, uint16_t* resp_apdu_size);
-void server_create_err_apdu(uint8_t err_code, error_t exception_code, uint8_t** resp_apdu, uint16_t* resp_apdu_size );
 
 //CLIENT
 int client_connect(char* ip, int port);
+void client_close(int socket);
+
+    //CLIENT PROCESSING
+error_t client_write_multiple_regs(int socket, uint16_t start_addr, uint16_t reg_count, uint16_t* values);
+
 
 #endif //MODBUS_AP_H

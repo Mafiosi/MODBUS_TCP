@@ -85,6 +85,10 @@ int server_start(int server, device* driver){
     return 1;
 }
 
+void server_close(int socket){
+    socket_close(socket);
+}
+
 //SERVER INTERACTION FUNCTIONS
 
     //SERVER PROCESS A REQUEST FROM CLIENT
@@ -209,4 +213,60 @@ int client_connect(char* ip, int port){
     }
 
     return client_socket;
+}
+
+void client_close(int socket){
+    socket_close(socket);
+}
+
+//CLIENT INTERACTION FUNCTIONS
+
+    //CLIENT ASKING TO WRITE MULTIPLE REGISTER
+error_t client_write_multiple_regs(int socket, uint16_t start_addr, uint16_t reg_count, uint16_t* values){
+
+    //CREATE APDU
+    uint16_t req_apdu_size = 6 + reg_count * 2;
+    uint8_t* req_apdu = ((uint8_t*)calloc((req_apdu_size), sizeof(uint8_t)));
+
+    //WRITE HEADER
+    req_apdu[0] = 0x10;
+    req_apdu[1] = ((start_addr & 0xFF00) >> 8);
+    req_apdu[2] = ((start_addr & 0x00FF) >> 0);
+    req_apdu[3] = ((reg_count & 0xFF00) >> 8);
+    req_apdu[4] = ((reg_count & 0x00FF) >> 0);
+    req_apdu[5] = 2 * reg_count;
+
+    //WRITE DATA ON APDU
+    for(int i = 0; i < reg_count; i++){
+        req_apdu[6 + i * 2    ] = ((values[i] & 0xFF00) >> 8);
+        req_apdu[6 + i * 2 + 1] = ((values[i] & 0x00FF) >> 0);
+    }
+
+    //SEND DATA TO MODBUS TCP
+    uint8_t* resp_apdu;
+    uint16_t resp_apdu_size;
+
+    //FUNCTION IN MODBUS TCP
+    if(!client_send_req_rec_resp(socket, req_apdu, req_apdu_size, &resp_apdu, &resp_apdu_size )) {
+        printf("ERROR: Socket Connection Closed while reading data from socket");
+    }
+
+    //PROCESS RESPONSE
+    uint8_t resp_code = resp_apdu[o];
+    error_t ret_val;
+
+    //TODO ADD CLIENT ERR APDU JUST LIKE SERVER
+    if (resp_code == 0x10){
+        ret_val = NO_ERROR;
+    }
+    else {
+        ret_val = resp_apdu[1];
+    }
+
+    //FRE VARIABLES
+    free(req_apdu);
+    free(resp_apdu);
+
+    return ret_val;
+
 }

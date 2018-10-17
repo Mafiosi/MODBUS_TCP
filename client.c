@@ -2,7 +2,6 @@
 // Created by Joao Beleza on 15-Oct-18.
 //
 
-//TODO FINISH CLIENT FUNCTIONS
 #include "general.h"
 #include "modbus_ap.h"
 #include "socket.h"
